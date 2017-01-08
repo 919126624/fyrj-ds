@@ -16,10 +16,15 @@
   <url>http://maven.apache.org</url>
  
    <dependencies>
+   	<dependency>
+		<groupId>com.fyrj</groupId>
+		<artifactId>parent-web</artifactId>
+		<version>${parent.web.version}</version>
+	</dependency>
     <dependency>
-      <groupId>com.fyrj.cims</groupId>
-      <artifactId>cims-core</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+        <groupId>com.fyrj.cims</groupId>
+        <artifactId>cims-core</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
   

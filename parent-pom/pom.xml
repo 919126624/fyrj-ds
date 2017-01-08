@@ -56,7 +56,9 @@
     <apache-ant-zip.version>2.3</apache-ant-zip.version>
     <asm.version>3.3.1</asm.version>
     <org.apache.ant.version>1.9.4</org.apache.ant.version>
-    <jetty.port>8080</jetty.port>
+    <jetty.port>10001</jetty.port>
+    
+    <parent.web.version>0.0.1-SNAPSHOT</parent.web.version>
     
     <nexus.content>http://192.168.1.198:8081/nexus/content</nexus.content>
   </properties>
@@ -388,7 +390,7 @@
 										<fileset dir="./" includes="*.gz" />
 										<fileset dir="./" includes="*.tmp" />
 									</delete> -->
-									<!-- 自动检测 WAR 项目打包 
+									<!-- 自动检测 WAR 项目打包 -->
 									<condition property="project.packaging.unzip.switch">
 										<and>
 											<equals arg1="${project.packaging}" arg2="war" casesensitive="false" trim="true" />
@@ -396,30 +398,28 @@
 									</condition>
 									<condition property="project.packaging.unzip.remove">
 										<not>
-											<available file="${project.basedir}/.assets.exclude" />
+											<available file="${project.basedir}/.asset.exclude" />
 										</not>
 									</condition>
 									<macrodef name="project.packaging.unzip.macro">
 										<sequential>
-											<unzip src="${maven.dependency.com.ffzx.parent-web.jar.path}" dest="${project.build.directory}">
+											<unzip src="${maven.dependency.com.fyrj.parent-web.jar.path}" dest="${project.build.directory}">
 												<patternset>
-													<include name="com/ffzx/web/asset/**" if="${project.packaging.unzip.remove}" />
-													<include name="com/ffzx/web/templets/**" if="${project.packaging.unzip.remove}" />
-													<include name="com/ffzx/web/root/**" if="${project.packaging.unzip.remove}" />
+													<include name="com/fyrj/asset/**" if="${project.packaging.unzip.remove}" />
+													<include name="com/fyrj/templates/**" if="${project.packaging.unzip.remove}" />
 												</patternset>
 											</unzip>
-											<move file="${project.build.directory}/com/ffzx/web/asset" tofile="${project.basedir}/src/main/webapp/asset" failonerror="false" />
-											<move file="${project.build.directory}/com/ffzx/web/templets" tofile="${project.basedir}/src/main/webapp/WEB-INF" failonerror="false" />
-											<move file="${project.build.directory}/com/ffzx/web/root" tofile="${project.basedir}/src/main/webapp" failonerror="false" />
+											<move file="${project.build.directory}/com/fyrj/asset" tofile="${project.basedir}/src/main/webapp/asset" failonerror="false" />
+											<move file="${project.build.directory}/com/fyrj/templates" tofile="${project.basedir}/src/main/webapp/WEB-INF" failonerror="false" />
 										</sequential>
 									</macrodef>
-									<script language="javascript">
+								 	<script language="javascript">
 										try {
 											if (project.getProperty("project.packaging.unzip.switch")) project.createTask("project.packaging.unzip.macro").perform();
 										} catch (ex) {
 											println("    [unzip] Warning: Could not expand file " + project.getProperty("src") + " into " + project.getProperty("dest"));
 										}
-									</script>-->
+									</script>
 								</target>
 							</configuration>
 						</execution>
