@@ -16,10 +16,10 @@
   <url>http://maven.apache.org</url>
  
    <dependencies>
-   	<dependency>
+	<dependency>
 		<groupId>com.fyrj</groupId>
 		<artifactId>parent-web</artifactId>
-		<version>${parent.web.version}</version>
+		<version>0.0.1-SNAPSHOT</version>
 	</dependency>
     <dependency>
         <groupId>com.fyrj.cims</groupId>
@@ -29,6 +29,7 @@
   </dependencies>
   
   <build>
+  	<finalName>cims-web</finalName>
   	<plugins>
   		<plugin>
   			<groupId>org.apache.maven.plugins</groupId>
@@ -43,9 +44,9 @@
 			<artifactId>maven-antrun-plugin</artifactId>
   		</plugin>
   		<plugin>
-  			<groupId>org.mortbay.jetty</groupId>
-			<artifactId>maven-jetty-plugin</artifactId>
-  		</plugin>
+		 	<groupId>org.mortbay.jetty</groupId>
+            <artifactId>jetty-maven-plugin</artifactId>
+		</plugin>
   	</plugins>
   </build>
 </project>

@@ -47,7 +47,7 @@
     
     <maven-compiler-plugin.version>2.5.1</maven-compiler-plugin.version>
     <maven-source-plugin.version>2.2.1</maven-source-plugin.version>
-    <maven-jetty-plugin.version>6.1.26</maven-jetty-plugin.version>
+    <jetty-maven-plugin.version>8.1.8.v20121106</jetty-maven-plugin.version>
 	<maven.antrun.plugin.version>1.8</maven.antrun.plugin.version>
 
     <com.google.guava.version>18.0</com.google.guava.version>
@@ -56,11 +56,17 @@
     <apache-ant-zip.version>2.3</apache-ant-zip.version>
     <asm.version>3.3.1</asm.version>
     <org.apache.ant.version>1.9.4</org.apache.ant.version>
+    
+    <!-- dubbo相关 -->
+    <com.alibaba.dubbo.version>2.5.3</com.alibaba.dubbo.version>
+    <org.apache.zookeeper.version>3.3.3</org.apache.zookeeper.version>
+    <com.101tec.zkclient.version>0.3</com.101tec.zkclient.version>
+    
     <jetty.port>10001</jetty.port>
     
     <parent.web.version>0.0.1-SNAPSHOT</parent.web.version>
     
-    <nexus.content>http://192.168.1.198:8081/nexus/content</nexus.content>
+    <nexus.content>http://192.168.1.199:8081/nexus/content</nexus.content>
   </properties>
 	
 	<modules>
@@ -288,6 +294,22 @@
 			    <artifactId>ant</artifactId>
 			    <version>${org.apache.ant.version}</version>
 			</dependency> -->
+			
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>dubbo</artifactId>
+				<version>${com.alibaba.dubbo.version}</version>
+			</dependency>
+			<dependency>
+			    <groupId>org.apache.zookeeper</groupId>
+			    <artifactId>zookeeper</artifactId>
+			    <version>${org.apache.zookeeper.version}</version>
+			</dependency>
+			<dependency>
+			    <groupId>com.101tec</groupId>
+			    <artifactId>zkclient</artifactId>
+			    <version>${com.101tec.zkclient.version}</version>
+			</dependency>
 	 	</dependencies>
 	</dependencyManagement>
 	
@@ -327,30 +349,22 @@
 						</execution>
 					</executions>
 				</plugin>
-				<plugin>
-					<groupId>org.mortbay.jetty</groupId>
-					<artifactId>maven-jetty-plugin</artifactId>
-					<version>${maven-jetty-plugin.version}</version>
-					<configuration>
-						<contextPath>/web</contextPath>
-                       <!---->  <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-                           <port>${jetty.port}</port>
-                           <maxIdleTime>60000</maxIdleTime>
-                        </connector> 
-						<webDefaultXml>src/main/webapp/WEB-INF/config/webdefault.xml</webDefaultXml>
-						<contextHandlers>  
-				            <contextHandler implementation="org.mortbay.jetty.webapp.WebAppContext">  
-				                <contextPath>/web/images</contextPath>  
-				                <resourceBase>E:/myFile/images</resourceBase>  
-				            </contextHandler> 
-				            <contextHandler implementation="org.mortbay.jetty.webapp.WebAppContext">  
-				                <contextPath>/web/attachment</contextPath>  
-				                <resourceBase>E:/myFile/attachment</resourceBase>  
-				            </contextHandler>   
-				        </contextHandlers>  
-					</configuration>
-				</plugin>
-				
+ 					<plugin>
+                   <groupId>org.mortbay.jetty</groupId>
+	               <artifactId>jetty-maven-plugin</artifactId>
+	               <version>${jetty-maven-plugin.version}</version>
+	               <configuration>
+	                   <webApp>
+	                       <contextPath>/${project.build.finalName}</contextPath>
+	                   </webApp>
+	                   <connectors>
+	                       <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+ 	                           <port>${jetty.port}</port>
+	                           <maxIdleTime>60000</maxIdleTime>
+	                       </connector>
+	                   </connectors>
+	               </configuration>
+	           </plugin>
 				<!-- Ant插件 -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>

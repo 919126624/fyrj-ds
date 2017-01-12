@@ -4,7 +4,11 @@
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/reources"/>
         <dependent-module archiveName="parent-web-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/parent-web/parent-web">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="framework-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/framework/framework">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="cims-core-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/cims-core/cims-core">
@@ -13,7 +17,7 @@
         <dependent-module archiveName="cims-api-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/cims-api/cims-api">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="framework-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/framework/framework">
+        <dependent-module archiveName="base-data-api-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/base-data-api/base-data-api">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="context-root" value="cims-web"/>

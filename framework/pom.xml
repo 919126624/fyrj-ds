@@ -18,7 +18,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-
+	
   <dependencies>
     <dependency><!-- 单元测试 -->
      	 <groupId>junit</groupId>
@@ -170,6 +170,19 @@
 	<dependency>
 		<groupId>org.springframework.amqp</groupId>
 		<artifactId>spring-rabbit</artifactId>
+	</dependency>
+	
+	<dependency>
+		<groupId>com.alibaba</groupId>
+		<artifactId>dubbo</artifactId>
+	</dependency>
+	<dependency>
+	    <groupId>org.apache.zookeeper</groupId>
+	    <artifactId>zookeeper</artifactId>
+	</dependency>
+	<dependency>
+	    <groupId>com.101tec</groupId>
+	    <artifactId>zkclient</artifactId>
 	</dependency>
   </dependencies>
 </project>

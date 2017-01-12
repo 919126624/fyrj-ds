@@ -22,9 +22,14 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.fyrj.cims</groupId>
-      <artifactId>cims-api</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+     	 <groupId>com.fyrj.cims</groupId>
+     	 <artifactId>cims-api</artifactId>
+     	 <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+    	<groupId>com.fyrj.base-data</groupId>
+   	  	<artifactId>base-data-api</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
   

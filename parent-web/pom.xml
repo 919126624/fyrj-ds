@@ -19,20 +19,12 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 	
-  <dependencies>
-	<dependency> 
-		<groupId>javax.servlet</groupId>
-		<artifactId>servlet-api</artifactId>
-		<scope>provided</scope>
-	</dependency>
-    <dependency> 
-		<groupId>javax.servlet</groupId>
-		<artifactId>jstl</artifactId>
-	</dependency>
-	<dependency>
-		<groupId>javax.servlet.jsp</groupId>
-		<artifactId>jsp-api</artifactId>
-	</dependency>
+   <dependencies>
+  	<dependency>
+  		<groupId>com.fyrj</groupId>
+  		<artifactId>framework</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
   </dependencies>
   
    <build>

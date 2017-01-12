@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:jee="http://www.springframework.org/schema/jee"
+    xmlns:tx="http://www.springframework.org/schema/tx" 
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:task="http://www.springframework.org/schema/task" 
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:cache="http://www.springframework.org/schema/cache"
+    xmlns:c="http://www.springframework.org/schema/c"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans  http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+    http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
+    http://www.springframework.org/schema/tx  http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+    http://www.springframework.org/schema/jee  http://www.springframework.org/schema/jee/spring-jee-4.0.xsd
+    http://www.springframework.org/schema/context  http://www.springframework.org/schema/context/spring-context-4.0.xsd
+    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+    http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd">
+
+	<!--开启注解 -->
+	<context:annotation-config />
+	
+	<!-- 开启自动切面代理 -->
+	<aop:aspectj-autoproxy />
+	
+	<context:component-scan base-package="com.fyrj">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+	
+	<!-- 导入资源配置文件 -->
+	<import resource="classpath:/applicationContext-redis.xml" />
+	<import resource="classpath:/applicationContext-dataSource.xml" />
+	<import resource="classpath:/applicationContext-beans.xml" />
+	<import resource="classpath:/application-dubbo-core.xml"/>
+	<import resource="classpath:/application-dubbo-provider.xml"/>
+	<import resource="classpath:/application-dubbo-consumer.xml"/>
+	
+	<!--装载属性占位符配置 -->
+	<context:property-placeholder properties-ref="customProperties" />
+	<bean id="customProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean" p:ignoreResourceNotFound="true" p:localOverride="true">
+		<property name="locations">
+			<list>
+				<value>classpath*:/systemConfig.properties</value><!--标准配置 -->	
+				<value>file:/d:/conf/prms/*.properties</value><!--开发环境配置 -->	
+                <value>file:/etc/conf/prms/*.properties</value><!--生产环境配置 -->	
+			</list>
+		</property>
+	</bean>
+	
+	<!--配置mybatis会话工厂 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="configLocation" value="classpath:/myBatis-configuration.xml"></property>
+		<property name="dataSource" ref="dataSource" />
+		<property name="mapperLocations" value="classpath*:com/fyrj/**/*Mapper.xml" />
+	</bean>
+	
+	<!-- 配置模板 -->
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">  
+        <property name="dataSource" ref="dataSource"/>  
+ 	</bean>
+ 	<!-- 配置事务管理器 -->
+ 	 <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+   	<!-- 系统参数配置
+   	<bean id="systemConfig" class="com.fyrj.base.utils.SystemConfig">
+   		<property name="resource" value="/WEB-INF/config/system.properties"></property>
+   	</bean> -->
+   	<!-- 启用@Transactional来进行事务管理 -->
+	<tx:annotation-driven transaction-manager="transactionManager"  /> 
+
+</beans>
+
+
