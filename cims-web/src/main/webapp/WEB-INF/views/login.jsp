@@ -4,11 +4,11 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>cas单点登录认证</title>
+<title>sso单点登录认证</title>
 </head>
 <body>
 	<del>
-		cas单点登录认证
+		sso单点登录认证
 	</del>
 </body>
 </html>
