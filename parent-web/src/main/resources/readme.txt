@@ -13,26 +13,34 @@ cims-tomcat===>>>      ip:cims.fyrj.com ；             shutdown.port:50030；ht
 
 
 ##############################zk集群#################################
-zookeeper1===>>> ip:192.168.1.199；port:30001
-zookeeper2===>>> ip:192.168.1.199；port:30002
+zookeeper1===>>> ip:192.168.1.199；port:31001
+zookeeper2===>>> ip:192.168.1.199；port:31002
 
 ############################dubbo配置################################
 base-data ===>>> port:21001
 cims===>>> port:21002
 
 ############################redis集群配置################################
-redis集群 {
+redis集群 {(集群后没有master与slave之分了，因为根据故障转移恢复机制，都可以成为master,所以我统一称它们为node)
 	位置：/usr/local/down/ungz/redis
-	r1:192.168.1.199:6379 ===>>> redis-sentinel  ;./conf/sentinel.conf
-	r2:192.168.1.200:6380 ===>>> redis-master    ;./conf/master.conf
-	r3:192.168.1.201:6381 ===>>> redis-slave-1   ;./conf/slave1.conf
-	r4:192.168.1.202:6382 ===>>> redis-slave-2   ;./conf/slave2.conf
+	r1:192.168.1.200:6380 ===>>> ./conf/master.conf （node1）
+	r2:192.168.1.201:6381 ===>>> ./conf/slave1.conf （node2）
+	r3:192.168.1.202:6382 ===>>> ./conf/slave2.conf （node3）
 }
 
 sentinel集群{
 	s1:192.168.1.199:26379 
 	s2:192.168.1.199:26380 
 }
+
+
+#############################shell脚本###############################
+pid位置：/usr/local/pid
+redis-sentinel-1.pid
+redis-sentinel-2.pid
+redis-node1.pid
+redis-node2.pid
+redis-node3.pid
 
 
 

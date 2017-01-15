@@ -49,6 +49,7 @@
     <maven-source-plugin.version>2.2.1</maven-source-plugin.version>
     <jetty-maven-plugin.version>8.1.8.v20121106</jetty-maven-plugin.version>
 	<maven.antrun.plugin.version>1.8</maven.antrun.plugin.version>
+	<maven.assembly.plugin.version>2.5.4</maven.assembly.plugin.version>
 
     <com.google.guava.version>18.0</com.google.guava.version>
     <com.rabbitmq.amqp-client.version>3.6.5</com.rabbitmq.amqp-client.version>
@@ -440,6 +441,30 @@
 					</executions>
 				</plugin>
 				
+	           	<!-- 自定义装配插件 -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>${maven.assembly.plugin.version}</version>
+					<configuration>
+						<!-- 是否在生成的打包文件的文件名中包含assembly id -->
+						<appendAssemblyId>false</appendAssemblyId>
+						<descriptors>
+							<descriptor>src/main/assembly/default.xml</descriptor>
+						</descriptors>
+					</configuration>
+					<executions>
+						<!--   execution的设置是为了将maven-assembly-plugin继承到标准的maven打包过程中，
+							这样在运行maven-package时就会执行maven-assembly-plugin的操作，从而实现我们需要的自定义打包 -->
+						<execution>
+							<id>make-assembly</id>
+							<phase>package</phase>
+							<goals>
+								<goal>single</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
 				
 			</plugins>
 		</pluginManagement>

@@ -15,7 +15,7 @@ a{text-decoration: none;}
 
 <script type="text/javascript" src="../asset/js/jquery-2.0.3.min.js"></script> 
 <script type="text/javascript">
-var baseUrl = "http://192.168.1.44:8085/cims-web/";
+var baseUrl = "http://"+window.location.host+"/cims-web/";
 function invokeServer(url,data,callBackFn){
 	$.ajax({
 		url:url,

@@ -7,7 +7,7 @@
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.1.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.1.xsd
 		http://www.springframework.org/schema/redis http://www.springframework.org/schema/redis/spring-redis-1.0.xsd">
-	  <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+	 <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
 	    <property name="minIdle" value="${redis.pool.minIdle}" /><!-- 最小空闲链接数 -->
         <property name="maxIdle" value="${redis.pool.maxIdle}" /><!-- 最大空闲连接数 -->
         <property name="maxWaitMillis" value="${redis.pool.maxWaitMillis}" /><!-- 等待超时 -->
@@ -15,16 +15,19 @@
         <property name="testOnReturn" value="${redis.pool.testOnReturn}"/>
         <property name="testWhileIdle" value="${redis.pool.testWhileIdle}"/>
 	  </bean>
-	<!-- # Jedis 集群连接工厂 
+	<!-- # Jedis 集群连接工厂 -->
 	<bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
 		<constructor-arg index="0">
 			<bean class="org.springframework.data.redis.connection.RedisSentinelConfiguration">
 				<property name="master">
-					<bean class="org.springframework.data.redis.connection.RedisNode" p:name="${redis.name}" c:host="${redis.host}" c:port="${redis.port}" />
+					<bean class="org.springframework.data.redis.connection.RedisNode" p:name="${redis.master.name}" c:host="${redis.master.host}" c:port="${redis.master.port}" />
 				</property>
 				<property name="sentinels">
 					<set>
-						<bean class="org.springframework.data.redis.connection.RedisNode" c:host="${redis.sentinels.n1.host}" c:port="${redis.sentinels.n1.port}" />
+						<bean class="org.springframework.data.redis.connection.RedisNode" 
+							c:host="${redis.sentinels.n1.host}" c:port="${redis.sentinels.n1.port}" />
+						 <bean class="org.springframework.data.redis.connection.RedisNode" 
+						c:host="${redis.sentinels.n2.host}" c:port="${redis.sentinels.n2.port}" />
 					</set>
 				</property>
 			</bean>
@@ -38,9 +41,9 @@
 	    <property name="password">
 			<value>${redis.password}</value>
 		</property>
-	</bean> -->
+	</bean> 
 	
-	<!-- 单机连接工厂 -->
+	<!-- 单机连接工厂
 	 <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
         <property name="usePool" value="true"></property>
         <property name="hostName" value="${redis.host}" />
@@ -49,7 +52,7 @@
         <property name="password" value="${redis.password}"/>
         <constructor-arg index="0" ref="jedisPoolConfig" />
     </bean>
-	
+	 -->
 	<!-- # Jedis 模板 -->
 	<bean id="stringRedisSerializer" class="org.springframework.data.redis.serializer.StringRedisSerializer" />
 	<bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
