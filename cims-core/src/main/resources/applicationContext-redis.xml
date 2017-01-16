@@ -15,7 +15,7 @@
         <property name="testOnReturn" value="${redis.pool.testOnReturn}"/>
         <property name="testWhileIdle" value="${redis.pool.testWhileIdle}"/>
 	  </bean>
-	<!-- # Jedis 集群连接工厂 -->
+	<!-- # Jedis 集群连接工厂
 	<bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
 		<constructor-arg index="0">
 			<bean class="org.springframework.data.redis.connection.RedisSentinelConfiguration">
@@ -42,8 +42,8 @@
 			<value>${redis.password}</value>
 		</property>
 	</bean> 
-	
-	<!-- 单机连接工厂
+	 -->
+	<!-- 单机连接工厂-->
 	 <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
         <property name="usePool" value="true"></property>
         <property name="hostName" value="${redis.host}" />
@@ -52,7 +52,7 @@
         <property name="password" value="${redis.password}"/>
         <constructor-arg index="0" ref="jedisPoolConfig" />
     </bean>
-	 -->
+	 
 	<!-- # Jedis 模板 -->
 	<bean id="stringRedisSerializer" class="org.springframework.data.redis.serializer.StringRedisSerializer" />
 	<bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">

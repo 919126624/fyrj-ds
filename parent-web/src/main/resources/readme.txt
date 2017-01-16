@@ -33,14 +33,9 @@ sentinel集群{
 	s2:192.168.1.199:26380 
 }
 
+###############################rabbitMq集群##############################
+端口:5672
 
-#############################shell脚本###############################
-pid位置：/usr/local/pid
-redis-sentinel-1.pid
-redis-sentinel-2.pid
-redis-node1.pid
-redis-node2.pid
-redis-node3.pid
 
 
 
