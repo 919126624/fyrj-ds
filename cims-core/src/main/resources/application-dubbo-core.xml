@@ -8,23 +8,23 @@
     http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
  
     <!-- 提供方应用信息，用于计算依赖关系 -->
-    <dubbo:application name="cims-app"  />
+    <dubbo:application name="${dubbo.application.name}"  />
  
     <!-- 使用zookeeper注册中心暴露服务地址 -->
-    <dubbo:registry protocol="zookeeper" id="zookeeperReg" address="192.168.1.199:31001" />
+    <dubbo:registry protocol="zookeeper" id="zookeeperReg" address="${dubbo.registry.zookeeper.address}" />
  
     <!-- 用dubbo协议在21001端口暴露cims的服务 -->
-    <dubbo:protocol name="dubbo" port="21002" />
+    <dubbo:protocol name="dubbo" port="${dubbo.registry.port}" />
 	
 	<!-- delay：延迟注册服务时间(毫秒)- ，设为-1时，表示延迟到Spring容器初始化完成时暴露服务
 		 retries：远程服务调用重试次数，不包括第一次调用，不需要重试设为0
 		 timeout:远程服务调用超时时间(毫秒),默认为1000
 	 -->
-	<dubbo:provider delay="0" timeout="60000" retries="1" />
+	<dubbo:provider delay="0" timeout="${dubbo.provider.timeout}" retries="${dubbo.retries}" />
 	
 	<!-- 
 		check:启动时检查提供者是否存在，true报错，false忽略,默认为true
 		timeout:远程服务调用超时时间(毫秒),默认为1000
 	 -->
-	<dubbo:consumer check="false" timeout="60000" />
+	<dubbo:consumer check="false" timeout="${dubbo.consumer.timeout}" />
 </beans>

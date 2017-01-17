@@ -1,5 +1,6 @@
 package com.fyrj.system.controller;
 
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONObject;
 import com.fyrj.basedata.api.dto.City;
 import com.fyrj.basedata.api.service.CityApiService;
+import com.fyrj.framework.mq.service.MqMessageDto;
 import com.fyrj.framework.utils.RedisUtil;
 
 @Controller
@@ -17,6 +19,10 @@ public class InvokeController {
 	private CityApiService cityApiService;
 	@Autowired
 	private RedisUtil redisUtil;
+	
+	@Autowired
+	private RabbitTemplate rabbitTemplate;
+	
 	@RequestMapping("index")
 	public String invokeTest(){
 		return "invoke/index";
@@ -67,4 +73,20 @@ public class InvokeController {
 		
 		return result;
 	}
+	
+	@RequestMapping("sendMqMessage")
+	@ResponseBody
+	public void sendMqMessage(String routingKey,String message){
+		MqMessageDto<String> dto = new MqMessageDto<>();
+		dto.setLabel("cims-app send");
+		dto.setDescribe("简单消息描述");
+		dto.setData(message);
+		//rabbitTemplate.convertAndSend(routingKey, dto);
+		rabbitTemplate.convertAndSend("direct_queue1", dto);
+		rabbitTemplate.convertAndSend("direct_queue2", dto);
+		rabbitTemplate.convertAndSend("topic_queue_exchange","topic.xxl", dto);
+		rabbitTemplate.convertAndSend("topic_queue_exchange","xxx.queue", dto);
+		rabbitTemplate.convertAndSend("fanout_queue_exchange", "", dto);
+	}
+	
 }

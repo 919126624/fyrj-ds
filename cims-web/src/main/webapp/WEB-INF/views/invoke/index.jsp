@@ -49,6 +49,16 @@ $(function(){
 			$("#redisTestResult").val(result.value);
 		});
 	});
+	
+	$("#mq_send_btn").click(function(){
+		var routingKey = $("#routingKey").val();
+		var message = $("#mqMessageValue").val();
+		if(!routingKey){alert("routingKey not be should null!"); return false;}
+		if(!message){alert("mqMessageValue not be should null!"); return false;}
+		invokeServer(baseUrl+"invoke/sendMqMessage",{routingKey:routingKey,message:message},function(result){
+			
+		});
+	});
 })
 </script>
 <title>系统服务总测试页面</title>
@@ -92,12 +102,10 @@ $(function(){
 	
 	<div class="invoke-border invoke-div5">
 		<p class="invoke-title">rabbit Mq集群测试</p>
-		send message value <input type="text" id="mqValue" name="redisValue"><br/><br/>
-		<button id="redis_put">put</button>
-		<p>operation result</p>
-		<textarea rows="5" cols="150">
-		
-		</textarea>
+		send message value
+		 <input type="text" id="routingKey" name="routingKey">
+		 <input type="text" id="mqMessageValue" name="mqMessageValue"><br/><br/>
+		<button id="mq_send_btn">send</button>
 	</div>
 </body>
 </html>

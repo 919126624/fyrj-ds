@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p" xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:util="http://www.springframework.org/schema/util" xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.1.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.1.xsd
+		http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-1.5.xsd">
+	<!-- exchange queue binging key 绑定 -->  
+		<!-- RabbitMQ 中所有生产者提交的消息都由 Exchange 来接受，再由 Exchange 按照特定的策略转发到 Queue 进行存储/处理 -->
+		<!-- 策略规则：pattern 表达式中 # 表示0个或若干个关键字， * 表示一个关键字 -->
+		<!-- 示例A：queues.# 能匹配 queues.sample 也能匹配 queues.sample.one -->
+		<!-- 示例B：queues.* 能匹配 queues.sample 不能匹配 queues.sample.one -->
+	<!-- 测试声明交换器以及队列绑定-->
+	<rabbit:direct-exchange name="direct_queue_exchange1">
+		<rabbit:bindings>
+			<rabbit:binding queue="direct_queue1"/>
+			<rabbit:binding queue="direct_queue2"/>
+		</rabbit:bindings>
+	</rabbit:direct-exchange>
+	 
+	<rabbit:topic-exchange name="topic_queue_exchange">
+		<rabbit:bindings>
+			<rabbit:binding pattern="#.queue" queue="topic_queue2"/>
+			<rabbit:binding pattern="topic.#" queue="topic_queue1"/>
+			<rabbit:binding pattern="direct_#" queue="direct_queue2"/>
+		</rabbit:bindings>
+	</rabbit:topic-exchange>
+	
+	<rabbit:fanout-exchange name="fanout_queue_exchange">
+		<rabbit:bindings>
+			<rabbit:binding queue="fanout_queue1"/>
+			<rabbit:binding queue="fanout_queue2"/>
+			<rabbit:binding queue="fanout_queue3"/>
+			<rabbit:binding queue="fanout_queue4"/>
+		</rabbit:bindings>
+	</rabbit:fanout-exchange>
+
+	
+	
+	<!-- RabbitMQ 消息监听容器（消费者） -->
+	<rabbit:listener-container connection-factory="rabbitConnectionFactory" 
+		message-converter="rabbitMessageConverter" channel-transacted="false" 
+		error-handler="logAndPropagateErrorHandler" requeue-rejected="false">
+		<!-- <rabbit:listener queues="queue_TEST1" ref="mqDemoService" method="onMessage" /> -->
+		<rabbit:listener queues="direct_queue1" ref="mqDemoService" method="direct_queue1" />
+		<rabbit:listener queues="direct_queue2" ref="mqDemoService" method="direct_queue2" />
+		<rabbit:listener queues="topic_queue1" ref="mqDemoService" method="topic_queue1" />
+		<rabbit:listener queues="topic_queue2" ref="mqDemoService" method="topic_queue2" />
+		<rabbit:listener queues="fanout_queue1" ref="mqDemoService" method="fanout_queue1" />
+		<rabbit:listener queues="fanout_queue2" ref="mqDemoService" method="fanout_queue2" />
+		<rabbit:listener queues="fanout_queue3" ref="mqDemoService" method="fanout_queue3" />
+		<rabbit:listener queues="fanout_queue4" ref="mqDemoService" method="fanout_queue4" />
+	</rabbit:listener-container>
+		
+</beans>

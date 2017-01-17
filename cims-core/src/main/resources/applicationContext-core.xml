@@ -35,6 +35,8 @@
 	<import resource="classpath:/application-dubbo-core.xml"/>
 	<import resource="classpath:/application-dubbo-provider.xml"/>
 	<import resource="classpath:/application-dubbo-consumer.xml"/>
+	<import resource="classpath:/application-rabbitmq-core.xml"/>
+	<import resource="classpath:/application-rabbitmq-consumer.xml"/>
 	
 	<!--装载属性占位符配置 -->
 	<context:property-placeholder properties-ref="customProperties" />

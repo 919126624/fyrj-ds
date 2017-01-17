@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p" xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:util="http://www.springframework.org/schema/util" xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.1.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.1.xsd
+		http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-1.5.xsd">
+	<!-- 配置明细参考http://blog.csdn.net/sn_gis/article/details/41252109 -->
+	<!-- # RabbitMQ 消息转换器 -->
+	<bean id="rabbitMessageConverter" class="org.springframework.amqp.support.converter.Jackson2JsonMessageConverter">
+		<property name="classMapper">
+			<bean class="org.springframework.amqp.support.converter.DefaultJackson2JavaTypeMapper" />
+		</property>
+	</bean>
+
+	<!-- # RabbitMQ 异常处理程序 -->
+	<bean id="logAndPropagateErrorHandler" class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+		<property name="staticField">
+			<value>org.springframework.scheduling.support.TaskUtils.LOG_AND_PROPAGATE_ERROR_HANDLER</value>
+		</property>
+	</bean>
+
+	<!-- # RabbitMQ 线程池（供创建连接使用） -->
+	<bean id="rabbitExecutor" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="staticMethod">
+			<value>java.util.concurrent.Executors.newFixedThreadPool</value>
+		</property>
+		<property name="arguments">
+			<array>
+				<value>10</value>
+			</array>
+		</property>
+	</bean>
+
+	<!-- # rabbit 连接工厂 -->
+	<rabbit:connection-factory id="rabbitConnectionFactory" host="${rabbitMq.host}" port="${rabbitMq.port}"
+		 username="${rabbitMq.username}" password="${rabbitMq.password}" executor="rabbitExecutor" />
+
+	<!-- # RabbitMQ 管理员 -->
+	<rabbit:admin id="rabbitAdmin" connection-factory="rabbitConnectionFactory" />
+	
+	
+	<!-- # RabbitMQ 模板（生产者） -->
+	<rabbit:template id="rabbitTemplate" connection-factory="rabbitConnectionFactory" channel-transacted="false" message-converter="rabbitMessageConverter" />
+	
+	<!-- #################################################队列声明 ############################################-->
+	<!-- 测试消息队列
+	exclusive:如果为true，队列将变为私有，那么就只有当前创建该队列的应用程序能消费该队列消息
+	auto-delete：当最后一个消费者取消订阅的时候，该队列将被自动删除
+	<rabbit:queue name="queue_TEST1" durable="true" auto-delete="false" exclusive="false">
+		<rabbit:queue-arguments>
+			 开启集群环境镜像队列
+			<entry key="x-ha-policy" value="all" />
+		</rabbit:queue-arguments>
+	</rabbit:queue>
+	-->
+	<rabbit:queue name="direct_queue1" durable="true" auto-delete="false" exclusive="false"/>
+	<rabbit:queue name="direct_queue2" durable="true" auto-delete="false" exclusive="false"/>
+	<rabbit:queue name="topic_queue1" durable="true" auto-delete="false" exclusive="false"/>
+	<rabbit:queue name="topic_queue2" durable="true" auto-delete="false" exclusive="false"/>
+	<rabbit:queue name="fanout_queue1" durable="true" auto-delete="false" exclusive="false"/>
+	<rabbit:queue name="fanout_queue2" durable="true" auto-delete="false" exclusive="false"/>
+	<rabbit:queue name="fanout_queue3" durable="true" auto-delete="false" exclusive="false"/>
+	<rabbit:queue name="fanout_queue4" durable="true" auto-delete="false" exclusive="false"/>
+	
+</beans>

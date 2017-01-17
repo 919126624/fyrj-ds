@@ -22,6 +22,11 @@
   </properties>
 
   <dependencies>
+	 <dependency>
+    	 <groupId>com.fyrj</groupId>
+    	 <artifactId>framework</artifactId>
+    	 <version>0.0.1-SNAPSHOT</version>
+    </dependency>
     <dependency>
     	<groupId>com.fyrj.base-data</groupId>
     	<artifactId>base-data-api</artifactId>
