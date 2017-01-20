@@ -50,6 +50,15 @@ $(function(){
 		});
 	});
 	
+	$("#redis_all_test").click(function(){
+		invokeServer(baseUrl+"invoke/redisAllTest",{},function(){});
+	});
+	
+	
+	$("#lock_test").click(function(){
+		invokeServer(baseUrl+"invoke/testRedisAndZookeeperLock",{},function(){});
+	});
+	
 	$("#mq_send_btn").click(function(){
 		var routingKey = $("#routingKey").val();
 		var message = $("#mqMessageValue").val();
@@ -83,6 +92,8 @@ $(function(){
 		value <input type="text" id="redisValue" name="redisValue"><br/><br/>
 		<button id="redis_get">get</button>
 		<button id="redis_put">put</button>
+		<button id="redis_all_test">TESTALL API</button>
+		<button id="lock_test">分布式锁</button>
 		<p>操作结果</p>
 		<textarea rows="8" cols="150" id="redisTestResult">
 		

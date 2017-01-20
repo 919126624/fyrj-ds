@@ -66,4 +66,18 @@
 			<ref bean="stringRedisSerializer" />
 		</property>
 	</bean>
+	<bean id="incRedisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+		<property name="connectionFactory">
+			<ref bean="jedisConnectionFactory" />
+		</property>
+		<property name="keySerializer">
+			<ref bean="stringRedisSerializer" />
+		</property>
+		<property name="hashKeySerializer">
+			<ref bean="stringRedisSerializer" />
+		</property>
+		<property name="valueSerializer">
+			<ref bean="stringRedisSerializer" />
+		</property>
+	</bean>
 </beans>

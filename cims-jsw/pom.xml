@@ -29,7 +29,7 @@
   </dependencies>
   
 
-<!--   <build>
+    <build>
 		<finalName>cims-jsw</finalName>
 		<plugins>
 			<plugin>
@@ -37,5 +37,5 @@
 				<artifactId>maven-assembly-plugin</artifactId>
 			</plugin>
 		</plugins>
-	</build> -->
+	</build> 
 </project>

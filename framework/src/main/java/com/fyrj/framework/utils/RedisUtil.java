@@ -1,6 +1,7 @@
 package com.fyrj.framework.utils;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -11,6 +12,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
 import com.fyrj.framework.utils.SpringUtils;
+import com.alibaba.fastjson.JSONObject;
 import com.fyrj.framework.utils.JsonMapper;
 
 /***
@@ -37,6 +39,14 @@ public class RedisUtil {
 		return SpringUtils.getApplicationContext().getBean(RedisUtil.class);
 	}
 	
+	/**自增操作的get方法*/
+	public Object incGet(final String key) {
+		Object result = null;
+		ValueOperations<Serializable, Object> operations = incRedisTemplate.opsForValue();
+		result = operations.get(key);
+		return result;
+	}
+	
 	/**读取缓存值*/
 	public Object get(final String key) {
 		Object result = null;
@@ -45,90 +55,26 @@ public class RedisUtil {
 		return result;
 	}
 	
-	/**
-	 * 读取缓存
-	 * @param key
-	 * @param cls 对象类型
-	 * @return
-	 */
+	/**读取缓存 */
 	public <T>T get(final String key,Class<T> cls) {
 		ValueOperations<Serializable, Object> operations = redisTemplate.opsForValue();
-		T result =JsonMapper.fromJsonString(operations.get(key).toString(), cls) ;
+//		T result =JsonMapper.fromJsonString(operations.get(key).toString(), cls) ;
+		T result = JSONObject.parseObject(operations.get(key).toString(), cls);
 		return result;
 	}
 	
-	/***
-	 * 集合获取 
-	 * @param key
-	 * @param collectionClass
-	 * @param classes
-	 * @return
-	 */
+	/**集合获取 */
 	public <T>T get(final String key,Class<?> collectionClass,Class<?> ...classes){
 		String value=get(key,String.class);
 		return JsonMapper.json2Collection(value,collectionClass, classes);
 	}
-
-	/**
-	 * 自增操作的get方法
-	 * @param key
-	 * @return
-	 */
-	public Object incGet(final String key) {
-		Object result = null;
-		ValueOperations<Serializable, Object> operations = incRedisTemplate.opsForValue();
-		result = operations.get(key);
-		return result;
-	}
 	
-	/**
-	 * 写入缓存 ,自增操作的set方法
-	 * @param key
-	 * @param value
-	 * @return
-	 */
-	public boolean incSet(final String key, Object value) {
-		return incSet(key, value, null);
-	}
-	
-	/**
-	 * 用于自增操作 的set 方法
-	 * @param key
-	 * @param value
-	 * @param expireTime
-	 * @return
-	 */
-	public boolean incSet(final String key, Object value, Long expireTime) {
-		boolean result = false;
-		try {
-			ValueOperations<Serializable, Object> operations = incRedisTemplate.opsForValue();
-			operations.set(key, value);
-			if(expireTime!=null){
-				incRedisTemplate.expire(key, expireTime, TimeUnit.SECONDS);
-			}
-			result = true;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
-	
-	/**
-	 * 自增
-	 * @param key
-	 * @param value
-	 * @return
-	 */
+	/**自增*/
 	public Long increment(String key, long value){
 		return redisTemplate.opsForValue().increment(key,value);
 	}
 	
-	/**
-	 * 自减
-	 * @param key
-	 * @param value
-	 * @return
-	 */
+	/**自减 */
 	public Long decrease(String key, long value){
 		return redisTemplate.opsForValue().increment(key,-value);
 	}
@@ -158,23 +104,12 @@ public class RedisUtil {
 		}
 	}
 	
-	/**
-	 * 写入缓存
-	 * @param key
-	 * @param value
-	 * @return
-	 */
+	/**写入缓存 */
 	public boolean set(final String key, Object value) {
 		return set(key, value, null);
 	}
 	
-	/***
-	 * 写入缓存带有效期
-	 * @param key
-	 * @param value
-	 * @param expireTime
-	 * @return
-	 */
+	/**写入缓存带有效期 */
 	public boolean set(final String key, Object value, Long expireTime) {
 		boolean result = false;
 		try {
@@ -190,12 +125,58 @@ public class RedisUtil {
 		return result;
 	}
 	
-	/***
-	 * 设置指定key的过期时间
-	 * @param key 
-	 * @param expireTime 秒数
-	 */
+	/**设置指定key的过期时间 */
 	public void setExpire(String key, Long expireTime) {
 		redisTemplate.expire(key, expireTime, TimeUnit.SECONDS);
+	}
+	
+	/**写入list 永久缓存*/
+	public Long pushList(final String key, Object value){
+		Long res = (long) 0;
+		try {
+			res = redisTemplate.opsForList().leftPush(key, value);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return res;
+	}
+
+	/**入栈 （redis写入格式为list）*/
+	public Long pushList(final String key, Object value, Long expireTime) {
+		Long res = (long) 0;
+		try {
+			res = redisTemplate.opsForList().leftPush(key, value);
+			redisTemplate.expire(key, expireTime, TimeUnit.SECONDS);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return res;
+	}
+
+	/** 检索  */
+	public List<Object> rangeList(final String key, int start, int end) {
+		List<Object> list = null;
+		try {
+			list = redisTemplate.opsForList().range(key, start, end);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	/**若存在则不写入且返回false，反之亦然*/
+	public boolean setNX(String key, Object value) {
+		boolean result = false;
+		ValueOperations<Serializable, Object> operations = redisTemplate.opsForValue();
+		result = operations.setIfAbsent(key, value);
+		return result;
+	}
+	
+	/** 返回key对应的旧值且写入新value，若key不存在，则返回null */
+	public Object getAndSet(String key, Object value) {
+		Object result = null;
+		ValueOperations<Serializable, Object> operations = redisTemplate.opsForValue();
+		result = operations.getAndSet(key, value);
+		return result;
 	}
 }
